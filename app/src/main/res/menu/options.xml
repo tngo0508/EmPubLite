@@ -13,4 +13,11 @@
         android:title="@string/about">
         >
     </item>
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings_applications_black_24dp"
+        android:showAsAction="never"
+        android:title="@string/settings"
+        >
+    </item>
 </menu>
