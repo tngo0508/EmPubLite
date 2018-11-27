@@ -61,6 +61,11 @@ public class EmPubLiteActivity extends Activity {
                 startActivity(i);
 
                 return (true);
+
+            case R.id.settings:
+                startActivity(new Intent(this, Preferences.class));
+
+                return (true);
         }
 
         return (super.onOptionsItemSelected(item));
@@ -74,11 +79,10 @@ public class EmPubLiteActivity extends Activity {
         if (adapter == null) {
             ModelFragment mfrag = (ModelFragment) getFragmentManager().findFragmentByTag(MODEL);
 
-            if (mfrag==null) {
+            if (mfrag == null) {
                 getFragmentManager().beginTransaction()
                         .add(new ModelFragment(), MODEL).commit();
-            }
-            else if (mfrag.getBook()!= null) {
+            } else if (mfrag.getBook() != null) {
                 setupPager(mfrag.getBook());
             }
         }
