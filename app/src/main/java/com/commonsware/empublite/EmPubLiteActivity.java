@@ -18,6 +18,8 @@ public class EmPubLiteActivity extends Activity {
     private static final String MODEL = "model";
     private ViewPager pager;
     private ContentsAdapter adapter;
+    private static final String PREF_LAST_POSITION = "lastPosition";
+    private ModelFragment mfrag = null;
 
     private void setupPager(BookContents contents) {
         adapter = new ContentsAdapter(this, contents);
@@ -77,9 +79,11 @@ public class EmPubLiteActivity extends Activity {
         EventBus.getDefault().register(this);
 
         if (adapter == null) {
-            ModelFragment mfrag = (ModelFragment) getFragmentManager().findFragmentByTag(MODEL);
+            mfrag = (ModelFragment) getFragmentManager().findFragmentByTag(MODEL);
 
             if (mfrag == null) {
+                mfrag = new ModelFragment();
+
                 getFragmentManager().beginTransaction()
                         .add(new ModelFragment(), MODEL).commit();
             } else if (mfrag.getBook() != null) {
@@ -91,6 +95,13 @@ public class EmPubLiteActivity extends Activity {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+
+        if (mfrag.getPrefs()!=null) {
+            int position=pager.getCurrentItem();
+
+            mfrag.getPrefs().edit().putInt(PREF_LAST_POSITION, position)
+                    .apply();
+        }
         super.onStop();
     }
 
