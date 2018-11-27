@@ -2,6 +2,7 @@ package com.commonsware.empublite;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.view.ViewPager;
@@ -19,6 +20,7 @@ public class EmPubLiteActivity extends Activity {
     private ViewPager pager;
     private ContentsAdapter adapter;
     private static final String PREF_LAST_POSITION = "lastPosition";
+    private static final String PREF_SAVE_LAST_POSITION="saveLastPosition";
     private ModelFragment mfrag = null;
 
     private void setupPager(BookContents contents) {
@@ -27,6 +29,13 @@ public class EmPubLiteActivity extends Activity {
 
         MaterialTabs tabs = (MaterialTabs) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
+
+        SharedPreferences prefs=mfrag.getPrefs();
+        if (prefs != null) {
+            if (prefs.getBoolean(PREF_SAVE_LAST_POSITION, false)) {
+                pager.setCurrentItem(prefs.getInt(PREF_LAST_POSITION, 0));
+            }
+        }
     }
 
     @Override
