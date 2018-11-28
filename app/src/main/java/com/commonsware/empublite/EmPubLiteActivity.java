@@ -20,8 +20,9 @@ public class EmPubLiteActivity extends Activity {
     private ViewPager pager;
     private ContentsAdapter adapter;
     private static final String PREF_LAST_POSITION = "lastPosition";
-    private static final String PREF_SAVE_LAST_POSITION="saveLastPosition";
+    private static final String PREF_SAVE_LAST_POSITION = "saveLastPosition";
     private ModelFragment mfrag = null;
+    private static final String PREF_KEEP_SCREEN_ON = "keepScreenOn";
 
     private void setupPager(BookContents contents) {
         adapter = new ContentsAdapter(this, contents);
@@ -30,11 +31,13 @@ public class EmPubLiteActivity extends Activity {
         MaterialTabs tabs = (MaterialTabs) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
 
-        SharedPreferences prefs=mfrag.getPrefs();
+        SharedPreferences prefs = mfrag.getPrefs();
         if (prefs != null) {
             if (prefs.getBoolean(PREF_SAVE_LAST_POSITION, false)) {
                 pager.setCurrentItem(prefs.getInt(PREF_LAST_POSITION, 0));
             }
+
+            pager.setKeepScreenOn(prefs.getBoolean(PREF_KEEP_SCREEN_ON, false));
         }
     }
 
@@ -99,14 +102,19 @@ public class EmPubLiteActivity extends Activity {
                 setupPager(mfrag.getBook());
             }
         }
+
+        if (mfrag.getPrefs() != null) {
+            pager.setKeepScreenOn(mfrag.getPrefs()
+                    .getBoolean(PREF_KEEP_SCREEN_ON, false));
+        }
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
 
-        if (mfrag.getPrefs()!=null) {
-            int position=pager.getCurrentItem();
+        if (mfrag.getPrefs() != null) {
+            int position = pager.getCurrentItem();
 
             mfrag.getPrefs().edit().putInt(PREF_LAST_POSITION, position)
                     .apply();
